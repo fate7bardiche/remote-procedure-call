@@ -97,13 +97,12 @@ class RequestResponseHandler {
         if (!Array.isArray(inputArg))
             return depth;
         let currentDepth = RequestResponseHandler.validArrayDepth(inputArg[0], depth + 1);
-        for (let i = 0; i < inputArg.length; i++) {
+        for (let i = 1; i < inputArg.length; i++) {
             if (currentDepth != RequestResponseHandler.validArrayDepth(inputArg[i], depth + 1)) {
                 throw TypeError("要素の深度がすべて同じではありません。\n同じ深さにある要素はの型は揃えてください。\n['aa', 'bb'] -> OK, ['aa', ['bb']] -> NG");
             }
         }
-        // 何も返さなくても動くが、戻り値の型的にとりあえずdepthを返している
-        return depth;
+        return currentDepth;
     }
     // 配列の中に、2種類以上の型が含まれていないことを検証する
     // 型が1種類だけであればパスする
