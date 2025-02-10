@@ -53,11 +53,12 @@ export class RequestResponseHandler {
         const argsTypes: string[] = []
         for(let i = 0; i < argsNum ; i++){
             let answer: string
+            let parsedArg:any
             while(true){
                 answer = await input({message: `${argsNum}個あるうちの${i + 1}つ目の引数を入力してください`})
                 console.log(answer, "が入力されました。")
                 try {
-                    const parsedArg = JSON.parse(answer)
+                    parsedArg = JSON.parse(answer)
                     try {
                         RequestResponseHandler.validInput(parsedArg)
                         argsTypes.push(RequestResponseHandler.getArgsType(parsedArg, ""))
@@ -70,39 +71,41 @@ export class RequestResponseHandler {
                     console.log("Syntaxが不正な文字列です。\n引数を入力しなおしてください。")
                 }
             }
-            args.push(answer)
+            args.push(parsedArg)
         }
         return [args, argsTypes]
     }
 
-    // static validInput(inputArg: any){
-    //     if(!Array.isArray(inputArg)) return
-    //     RequestResponseHandler.validArrayInput(inputArg, 0, inputArg.length - 1)
-    // }
+    static validInput(parsedArg: any){
+        RequestResponseHandler.validArrayDepth(parsedArg, 0)
+        RequestResponseHandler.validNumberOfTypes(parsedArg)
+    }
 
-    // static validArrayInput(inputArg: any, start: number, end: number): string{
-    //     if (start == end) {
-    //         if(Array.isArray(inputArg)){
-    //             RequestResponseHandler.validArrayInput(inputArg, 0, inputArg.length - 1)
-    //         } else {
-    //             return typeof inputArg
-    //         }
-    //     } 
+    // 多次元の配列の場合、同じ深さにある各要素が持つ配列の深さが揃っていること検証する
+    // 揃っていればパスする
+    static validArrayDepth(inputArg: any, depth: number): number{
+        if(!Array.isArray(inputArg)) return depth
 
-    //     const middle = Math.floor((start + end) / 2)
+        let currentDepth: number = RequestResponseHandler.validArrayDepth(inputArg[0], depth + 1)
+        for(let i = 0; i < inputArg.length; i++){
+            if(currentDepth != RequestResponseHandler.validArrayDepth(inputArg[i], depth + 1)){
+                throw TypeError("要素の深度がすべて同じではありません。\n同じ深さにある要素はの型は揃えてください。\n['aa', 'bb'] -> OK, ['aa', ['bb']] -> NG")
+            }
+        }
+        // 何も返さなくても動くが、戻り値の型的にとりあえずdepthを返している
+        return depth
+    }
 
-    //     const type1 = RequestResponseHandler.validArrayInput(inputArg, start, middle)
-    //     const type2 = RequestResponseHandler.validArrayInput(inputArg, middle, end)
-    //     if(type1 != type2 ) throw TypeError("配列に2種類以上のデータ型の要素が含まれています。データ型は1種類までにしてください。")
-    //     return type1
-    // }
-
-    static validInput(inputArg: any): string{
+    // 配列の中に、2種類以上の型が含まれていないことを検証する
+    // 型が1種類だけであればパスする
+    static validNumberOfTypes(inputArg: any): string{
         if(!Array.isArray(inputArg)) return typeof inputArg
 
-        let arrayFirstItemType: string = RequestResponseHandler.validInput(inputArg[0]);
+        let arrayFirstItemType: string = RequestResponseHandler.validNumberOfTypes(inputArg[0]);
         for(let i = 1; i < inputArg.length; i++){
-            if(arrayFirstItemType != RequestResponseHandler.validInput(inputArg[i])) throw TypeError("配列に2種類以上のデータ型の要素が含まれています。データ型は1種類までにしてください。")
+            if(arrayFirstItemType != RequestResponseHandler.validNumberOfTypes(inputArg[i])) {
+                throw TypeError("配列に2種類以上のデータ型の要素が含まれています。データ型は1種類までにしてください。")
+            }
         }
         return arrayFirstItemType
     }
@@ -110,16 +113,7 @@ export class RequestResponseHandler {
     // シェルに入力した関数の引数の型を決めていく関数
     // シェルから入力したので、引数は初め必ずstringである
     // stringの文字列をパースし、型を調べていく
-    // static getArgsTypeList(args: string[]): string[]{
-    //     const argsTypes: string[] = []
-    //     for(let i = 0; i < args.length; i++){
-    //         const parsedArg = JSON.parse(args[i])
-    //         argsTypes.push(RequestResponseHandler.getArgsType(parsedArg, ""))
-    //     }
-    //     return argsTypes
-    // }
-
-    // オブジェクトは配列以外、考慮されていない。
+    // この関数は、オブジェクトに関してな配列以外が渡されることを考慮していない
     static getArgsType(arg: any, typeResult: string):string{
         if(!Array.isArray(arg)) {
             if(typeof arg == "number") return RequestResponseHandler.convertNumberToPrimitiveNumericType(arg) + typeResult
