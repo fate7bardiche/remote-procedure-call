@@ -89,7 +89,7 @@ export class RequestResponseHandler {
         let currentDepth: number = RequestResponseHandler.validArrayDepth(inputArg[0], depth + 1)
         for(let i = 1; i < inputArg.length; i++){
             if(currentDepth != RequestResponseHandler.validArrayDepth(inputArg[i], depth + 1)){
-                throw TypeError("要素の深度がすべて同じではありません。\n同じ深さにある要素はの型は揃えてください。\n['aa', 'bb'] -> OK, ['aa', ['bb']] -> NG")
+                throw TypeError("配列内の各要素の深度が揃っていません。\n同じ深さにある要素の型は揃えてください。\n['aa', 'bb'] -> OK, ['aa', ['bb']] -> NG")
             }
         }
         return currentDepth
