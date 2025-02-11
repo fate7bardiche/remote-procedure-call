@@ -25,7 +25,9 @@ class RpcAccessController:
             result = method(json_data["params"], json_data["param_types"])
         except Exception as e:
             print("- エラーレスポンスを返します。")
-            connection.sendall(json.dumps(self.create_error_response(client_id, e )).encode())
+            error_response = self.create_error_response(client_id, e )
+            print(error_response)
+            connection.sendall(json.dumps(error_response).encode())
             return
 
         response = self.create_success_response(client_id, result)
