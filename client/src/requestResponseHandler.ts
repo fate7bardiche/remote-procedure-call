@@ -103,7 +103,7 @@ export class RequestResponseHandler {
         let arrayFirstItemType: string = RequestResponseHandler.validNumberOfTypes(inputArg[0]);
         for(let i = 1; i < inputArg.length; i++){
             if(arrayFirstItemType != RequestResponseHandler.validNumberOfTypes(inputArg[i])) {
-                throw TypeError("配列に2種類以上のデータ型の要素が含まれています。データ型は1種類までにしてください。")
+                throw TypeError("配列に2種類以上のデータ型が含まれています。データ型は1種類までにしてください。")
             }
         }
         return arrayFirstItemType
