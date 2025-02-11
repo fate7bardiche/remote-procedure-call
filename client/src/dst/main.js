@@ -16,7 +16,6 @@ const crypto_1 = __importDefault(require("crypto"));
 const requestResponseHandler_1 = require("./requestResponseHandler");
 const socketServer_1 = require("./socketServer");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("dashimasu");
     const sock = new socketServer_1.SocketServer("config.json");
     const client = sock.client;
     const requestResponseHandler = new requestResponseHandler_1.RequestResponseHandler(client, crypto_1.default.randomUUID());

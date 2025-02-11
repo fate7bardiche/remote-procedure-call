@@ -11,9 +11,9 @@ class SocketServer {
         this.client = SocketServer.createSocketServer(jsonPath);
     }
     static createSocketServer(jsonPath) {
-        const jsonFile = fs_1.default.readFileSync(`../../${jsonPath}`, 'utf-8');
+        const jsonFile = fs_1.default.readFileSync(`../../../${jsonPath}`, 'utf-8');
         const jsonData = JSON.parse(jsonFile);
-        const socketAddress = "../../" + jsonData["filepath"];
+        const socketAddress = "../../../" + jsonData["filepath"];
         return net_1.default.createConnection(socketAddress);
     }
     onClose() {

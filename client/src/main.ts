@@ -3,7 +3,6 @@ import { RequestResponseHandler } from './requestResponseHandler';
 import { SocketServer } from './socketServer';
 
 const main = async() => {
-    console.log("dashimasu")
     const sock = new SocketServer("config.json")
     const client = sock.client
 

@@ -9,10 +9,10 @@ export class SocketServer {
     }
 
     static createSocketServer(jsonPath: string){
-        const jsonFile = fs.readFileSync(`../../${jsonPath}`, 'utf-8')
+        const jsonFile = fs.readFileSync(`../../../${jsonPath}`, 'utf-8')
         const jsonData = JSON.parse(jsonFile)
     
-        const socketAddress = "../../" + jsonData["filepath"]
+        const socketAddress = "../../../" + jsonData["filepath"]
     
         return net.createConnection(socketAddress)
     }
