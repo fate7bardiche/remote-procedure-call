@@ -161,7 +161,6 @@ export class RequestResponseHandler {
         const response = JSON.parse(this.decoder.decode(data))
         console.log(response)
         console.log()
-
         
         if(Object.keys(response).includes("error")) {
             console.log("エラーが発生しました")
