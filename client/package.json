@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode=development",
     "start": "webpack serve --mode=development",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "postinstall": "tsc"
   },
   "keywords": [],
   "author": "",
